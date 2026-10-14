@@ -43,8 +43,26 @@ def test_worst_case_at_the_slider_maximum_terminates_and_flags_incompleteness():
         assert s.classes[2].mean > C.SOLL[2]
 
 
+def test_qualified_count_rounds_half_up_and_stays_between_one_and_all():
+    cases = {  # (Träger, Prozent): erwartet; Rechnung Träger * Prozent / 100
+        (1, 40): 1,      # 0,4 -> 0, aber mindestens einer
+        (4, 40): 2,      # 1,6
+        (8, 40): 3,      # 3,2
+        (8, 85): 7,      # 6,8
+        (12, 85): 10,    # 10,2
+        (10, 45): 5,     # 4,5 -> aufgerundet (Python round() gäbe 4)
+        (6, 75): 5,      # 4,5
+        (7, 50): 4,      # 3,5
+        (7, 64): 4,      # 4,48: knapp unter .5, bleibt 4
+        (8, 100): 8,     # alle
+        (14, 100): 14,
+    }
+    for (n, p), expected in cases.items():
+        assert n_qualified_from_percent(n, p) == expected, (n, p)
+
+
 def test_one_porter_one_qualified_and_no_orders():
-    assert n_qualified_from_percent(1, 40) == 1 and n_qualified_from_percent(4, 40) == 2 and n_qualified_from_percent(8, 100) == 8
+    assert n_qualified_from_percent(1, 40) == 1
     sim = simulate(H, [], 1, 1, "fifo")
     assert sim.complete and sim.records == ()
     st = ev.rule_stat("fifo", sim)

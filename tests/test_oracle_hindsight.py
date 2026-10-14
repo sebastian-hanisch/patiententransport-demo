@@ -121,3 +121,19 @@ def test_verifier_catches_corrupted_schedules():
     assert HS.verify_schedule(H, jobs, missing, qualified)
     lie = HS.HindsightResult(res.status, res.objective + 5, res.bound, res.starts, res.routes, res.n_jobs)
     assert any("Zielwert" in p for p in HS.verify_schedule(H, jobs, lie, qualified))
+
+
+def test_verifier_uses_the_later_of_report_and_porter_free_time(mini, make_order):
+    # Fall A (Meldung später als der Träger frei): Auftrag B -> C um 20, Träger bei A, Anfahrt 3: früheste Ankunft 23
+    jobs = HS.make_jobs([make_order(1, 20, 1, 2)])
+    ok = HS.HindsightResult("OPTIMAL", 3.0, 3.0, (23,), ((0,),), 1)
+    early = HS.HindsightResult("OPTIMAL", 2.0, 2.0, (22,), ((0,),), 1)
+    assert HS.verify_schedule(mini, jobs, ok, [True]) == []
+    assert any("vor frühestmöglich 23" in p for p in HS.verify_schedule(mini, jobs, early, [True]))
+    # Fall B (Träger noch beschäftigt, wenn gemeldet): Job 0 B -> C um 0, Ankunft 3, frei um 3 + 2 + 5 + 2 = 12 bei C;
+    # Job 1 ab C um 5, Anfahrt 0: früheste Ankunft max(5, 12) + 0 = 12
+    jobs = HS.make_jobs([make_order(1, 0, 1, 2), make_order(2, 5, 2, 1)])
+    ok = HS.HindsightResult("OPTIMAL", 10.0, 10.0, (3, 12), ((0, 1),), 2)
+    early = HS.HindsightResult("OPTIMAL", 9.0, 9.0, (3, 11), ((0, 1),), 2)
+    assert HS.verify_schedule(mini, jobs, ok, [True]) == []
+    assert any("vor frühestmöglich 12" in p for p in HS.verify_schedule(mini, jobs, early, [True]))

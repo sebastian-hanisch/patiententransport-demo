@@ -99,7 +99,7 @@ nicht Teil dieses Repos) zeigt dort die Vorausschau am nächsten an der Schranke
 
 ## Tests
 
-81 Tests, rund 2 Minuten (Windows, `_venvs/test`):
+83 Tests, rund 1 bis 2 Minuten (Windows, `_venvs/test`):
 
 - **Regeln und Simulation (Einheiten):** je Regel an einem Mini-Haus mit drei Orten von Hand gerechnet (nächster Träger, Bett-Qualifikation,
   Reihenfolge von FIFO / Priorität / Frist, Sammelfenster nur im Takt, Vorausschau hält einen Auftrag für einen bald freien Träger),
@@ -112,6 +112,10 @@ nicht Teil dieses Repos) zeigt dort die Vorausschau am nächsten an der Schranke
 - **Claims:** jede Zahl der Befundtabellen (`tests/test_claims.py`), inklusive der Hindsight-Zahlen auf den 23 beweisbaren Instanzen.
 - **Eckfälle:** jeder Regler am Minimum und Maximum, alle Minima und alle Maxima zusammen, Worst-Case (4 Träger bei 36 Aufträgen je Stunde,
   die Simulation endet an der Obergrenze), keine Aufträge, Ergebnis unabhängig von `PYTHONHASHSEED`.
+- **Mutationslauf** (`tools/oracle_mutation.py` im Website-Repo, 60 Mutanten aus den Kernmodulen): 8 Überlebende, einzeln gelesen. Zwei
+  echte Lücken geschlossen: der Zeitplan-Prüfer war an der Stelle `max(Meldung, frei)` nicht festgenagelt, und die Zahl der Bett-
+  Qualifizierten rundete mit Pythons Banker-Rundung (4,5 wurde 4; jetzt ganzzahlig ab .5 aufgerundet, mit Grenztests). Sechs
+  äquivalente Mutanten sind in `tests/mutation_state.json` festgehalten.
 - **Oberfläche:** AppTest-Rauchtest (jeder Button, jeder Regler an den Grenzen), Presets, Permalink-Begrenzung, PDF für jedes Preset, Footer,
   Laufzeit-Importe gegen `requirements.txt`.
 

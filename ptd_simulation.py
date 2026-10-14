@@ -45,8 +45,8 @@ def qualified_flags(n_porters: int, n_qualified: int) -> list[bool]:
 
 
 def n_qualified_from_percent(n_porters: int, percent: int) -> int:
-    """Mindestens ein Träger mit Bett-Qualifikation, höchstens alle."""
-    return min(n_porters, max(1, round(n_porters * percent / 100)))
+    """Mindestens ein Träger mit Bett-Qualifikation, höchstens alle; ab .5 wird aufgerundet (ganzzahlig gerechnet, kein Banker-Runden)."""
+    return min(n_porters, max(1, (2 * n_porters * percent + 100) // 200))
 
 
 def break_times(n_porters: int) -> list[int]:
