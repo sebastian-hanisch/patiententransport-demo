@@ -1,7 +1,6 @@
 # Patiententransport: welche Zuweisungsregel hält den Notfall im Soll? – Streamlit-Demo
 
-<!-- TODO nach dem Deploy: direkt hierher den Live-Link setzen (Leerzeile davor und danach):
-**[→ Demo live ausprobieren](https://sebastianhanisch-patiententransport-demo.streamlit.app/)** -->
+**[→ Demo live ausprobieren](https://sebastianhanisch-patiententransport-demo.streamlit.app/)**
 
 Fall-Demo für die Website „Sebastian Hanisch – Operations Research und Machine Learning“ (`demos.html`). Ein synthetischer
 Krankenhaustag (06:00 bis 18:00): Stationen, Notaufnahme und Diagnostik melden **Transportaufträge laufend**, eine Leitstelle
